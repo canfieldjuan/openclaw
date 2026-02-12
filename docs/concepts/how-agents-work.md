@@ -11,13 +11,17 @@ title: "How Agents Work"
 
 OpenClaw agents are AI-powered assistants that can autonomously respond to messages, execute tasks, and make decisions. This guide explains how they work, how they respond to emails, and what level of autonomy they have.
 
+<Note>
+**Cloud vs Local Models**: OpenClaw uses **cloud APIs** (Anthropic, OpenAI, etc.) by default for best results. Local models are supported but may have reduced reliability for complex autonomous tasks. See [Cloud vs Local Models](#cloud-vs-local-models) for details.
+</Note>
+
 ## What Are Agents?
 
 An **agent** in OpenClaw is an AI assistant with:
 
 - **Identity**: Each agent has a unique ID, name, avatar, and personality (defined in `SOUL.md`)
 - **Workspace**: A dedicated directory where the agent can read/write files and execute commands
-- **Model**: A specific AI model (Claude, GPT, etc.) that powers the agent's reasoning
+- **Model**: A specific AI model (Claude, GPT, etc.) that powers the agent's reasoning _(see [Cloud vs Local Models](#cloud-vs-local-models) below)_
 - **Tools**: Access to bash execution, file operations, messaging, browser automation, and more
 - **Memory**: Session transcripts and workspace files that provide context across conversations
 - **Skills**: Specialized capabilities that can be loaded on-demand (similar to VS Code extensions)
@@ -42,6 +46,101 @@ Agents are configured in `~/.openclaw/openclaw.json`:
 ```
 
 **Key files**: `src/agents/`, `src/config/types.agents.ts`
+
+## Cloud vs Local Models
+
+### Default: Cloud APIs ☁️
+
+**OpenClaw uses cloud-based AI APIs by default:**
+
+- **Anthropic** (Claude Pro/Max) - Recommended for best results
+- **OpenAI** (ChatGPT/Codex) - GPT-5.2, GPT-4o, o1, etc.
+- **OpenRouter** - Access to multiple providers
+- Other cloud providers: Moonshot, Minimax, GLM, etc.
+
+These are **hosted services** that require:
+- Internet connection
+- API keys or OAuth tokens
+- Subscription (for Claude Pro/Max, ChatGPT Plus/Pro)
+
+**Why cloud APIs are recommended:**
+- **Long context windows**: Claude 200K, GPT-4o 128K for handling large codebases
+- **Tool use reliability**: Better at structured tool calling and multi-step reasoning
+- **Prompt injection resistance**: More robust safety training
+- **Performance**: Fast inference with high-quality responses
+
+### Local Models Support 🏠
+
+OpenClaw **can** work with local models via:
+- **OpenAI-compatible endpoints** (Ollama, LM Studio, vLLM, etc.)
+- **Custom providers** configured to point to `localhost`
+
+**Example local model config:**
+
+```json5
+{
+  agents: {
+    defaults: {
+      model: "openai/local-model",
+      provider: {
+        openai: {
+          baseURL: "http://localhost:11434/v1",  // Ollama
+          apiKey: "ollama"  // Dummy key
+        }
+      }
+    }
+  }
+}
+```
+
+### Differences with Local Models
+
+| Feature | Cloud APIs | Local Models |
+|---------|-----------|--------------|
+| **Context Window** | 128K-200K tokens | Typically 4K-32K |
+| **Tool Calling** | Excellent structured output | May be unreliable |
+| **Response Quality** | High consistency | Varies by model |
+| **Autonomy Features** | ✅ All work well | ⚠️ May be limited |
+| **Speed** | Fast (optimized infra) | Depends on hardware |
+| **Privacy** | Data sent to provider | Fully private |
+| **Cost** | Subscription required | Free after hardware |
+| **Internet Required** | Yes | No |
+
+**Autonomy with local models:**
+
+✅ **These still work:**
+- Message responses (agents respond to any message)
+- Cron jobs (scheduled tasks execute)
+- Hooks (event-driven automation triggers)
+- Tool execution (bash, files, etc.)
+
+⚠️ **These may be degraded:**
+- **Email responses**: Local models may struggle with complex email parsing and deciding when/how to respond
+- **Multi-step reasoning**: Shorter context windows make it harder to maintain state across multiple tool calls
+- **Tool use reliability**: Local models may produce malformed JSON or skip tool calls
+- **Decision quality**: May make less optimal choices about which tools to use
+
+**Real-world example:**
+
+A **cloud model** (Claude Sonnet) might:
+1. Read an email about a bug report
+2. Search the codebase for related code
+3. Identify the likely cause
+4. Draft a detailed response with diagnosis
+5. Schedule a follow-up task to verify the fix
+
+A **local model** (Llama 3.2 8B) might:
+1. Read the email ✅
+2. Attempt to search but produce malformed tool call ❌
+3. Generate a generic response without context ⚠️
+
+### Recommendation
+
+**For production use**: Stick with cloud APIs (Anthropic Claude or OpenAI GPT) for reliable autonomous operation.
+
+**For experimentation**: Local models work for basic chat and simple tasks, but expect reduced quality for complex autonomy.
+
+**Docs**: [Model Providers](/concepts/model-providers), [Model Configuration](/concepts/models)
 
 ## How Agents Respond to Emails
 
@@ -356,16 +455,19 @@ flowchart TB
 ## Summary
 
 **How do agents work?**  
-Agents are AI-powered assistants that receive messages through connected channels, process them using AI models, execute tools to complete tasks, and send responses back.
+Agents are AI-powered assistants that receive messages through connected channels, process them using AI models (cloud or local), execute tools to complete tasks, and send responses back.
+
+**Do they use cloud APIs?**  
+Yes, by default. OpenClaw uses cloud APIs (Anthropic, OpenAI, etc.) for best results. Local models are supported but may have reduced quality for complex autonomous tasks. See [Cloud vs Local Models](#cloud-vs-local-models) above.
 
 **How do they respond to emails?**  
-Through Gmail Pub/Sub push notifications that trigger webhook-based agent sessions, allowing fully automated email monitoring and responses.
+Through Gmail Pub/Sub push notifications that trigger webhook-based agent sessions, allowing fully automated email monitoring and responses. Works with any model, but cloud APIs provide more reliable parsing and decision-making.
 
 **Are they autonomous?**  
-Yes. Agents automatically respond to messages, run scheduled tasks via cron, execute event-driven hooks, and maintain OAuth tokens without human intervention.
+Yes. Agents automatically respond to messages, run scheduled tasks via cron, execute event-driven hooks, and maintain OAuth tokens without human intervention. Autonomy features work with both cloud and local models, though reliability varies.
 
 **Do agents have agency?**  
-Yes. Agents make decisions about which tools to use, spawn subagents for specialized tasks, maintain memory across conversations, and pursue multi-turn goals. They operate within safety constraints (approval gates, sandboxes, allowlists) but have significant autonomy.
+Yes. Agents make decisions about which tools to use, spawn subagents for specialized tasks, maintain memory across conversations, and pursue multi-turn goals. They operate within safety constraints (approval gates, sandboxes, allowlists) but have significant autonomy. Decision quality depends on the underlying model.
 
 ## Learn More
 
