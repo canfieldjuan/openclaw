@@ -48,6 +48,14 @@
   },
   "redirects": [
     {
+      "source": "/how-agents-work",
+      "destination": "/concepts/how-agents-work"
+    },
+    {
+      "source": "/agents",
+      "destination": "/concepts/how-agents-work"
+    },
+    {
       "source": "/messages",
       "destination": "/concepts/messages"
     },
@@ -904,6 +912,7 @@
               {
                 "group": "Fundamentals",
                 "pages": [
+                  "concepts/how-agents-work",
                   "concepts/architecture",
                   "concepts/agent",
                   "concepts/agent-loop",

@@ -45,6 +45,8 @@ title: "OpenClaw"
 
 OpenClaw is a **self-hosted gateway** that connects your favorite chat apps — WhatsApp, Telegram, Discord, iMessage, and more — to AI coding agents like Pi. You run a single Gateway process on your own machine (or a server), and it becomes the bridge between your messaging apps and an always-available AI assistant.
 
+**Want to understand how agents work?** See [How Agents Work](/concepts/how-agents-work) for a comprehensive guide covering email responses, autonomy, and agent capabilities.
+
 **Who is it for?** Developers and power users who want a personal AI assistant they can message from anywhere — without giving up control of their data or relying on a hosted service.
 
 **What makes it different?**
