@@ -1130,6 +1130,7 @@
                     "group": "Configuration and operations",
                     "pages": [
                       "gateway/configuration",
+                      "gateway/production-deployment",
                       "gateway/configuration-reference",
                       "gateway/configuration-examples",
                       "gateway/authentication",
