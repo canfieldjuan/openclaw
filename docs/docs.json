@@ -56,6 +56,14 @@
       "destination": "/concepts/how-agents-work"
     },
     {
+      "source": "/local",
+      "destination": "/concepts/local-autonomous-setup"
+    },
+    {
+      "source": "/local-models",
+      "destination": "/concepts/local-autonomous-setup"
+    },
+    {
       "source": "/messages",
       "destination": "/concepts/messages"
     },
@@ -913,6 +921,7 @@
                 "group": "Fundamentals",
                 "pages": [
                   "concepts/how-agents-work",
+                  "concepts/local-autonomous-setup",
                   "concepts/architecture",
                   "concepts/agent",
                   "concepts/agent-loop",
