@@ -48,6 +48,26 @@
   },
   "redirects": [
     {
+      "source": "/how-agents-work",
+      "destination": "/concepts/how-agents-work"
+    },
+    {
+      "source": "/agents",
+      "destination": "/concepts/how-agents-work"
+    },
+    {
+      "source": "/local",
+      "destination": "/concepts/local-autonomous-setup"
+    },
+    {
+      "source": "/local-models",
+      "destination": "/concepts/local-autonomous-setup"
+    },
+    {
+      "source": "/atlas",
+      "destination": "/concepts/atlas-autonomous-opportunities"
+    },
+    {
       "source": "/messages",
       "destination": "/concepts/messages"
     },
@@ -904,6 +924,9 @@
               {
                 "group": "Fundamentals",
                 "pages": [
+                  "concepts/how-agents-work",
+                  "concepts/local-autonomous-setup",
+                  "concepts/atlas-autonomous-opportunities",
                   "concepts/architecture",
                   "concepts/agent",
                   "concepts/agent-loop",
@@ -1107,6 +1130,7 @@
                     "group": "Configuration and operations",
                     "pages": [
                       "gateway/configuration",
+                      "gateway/production-deployment",
                       "gateway/configuration-reference",
                       "gateway/configuration-examples",
                       "gateway/authentication",
